@@ -31,7 +31,7 @@ const produits = [
  app.get('/produits',(request,response)=>{
         console.log(request.header("x-request-description"));
         response.set("x-response-description","Affichage des produits");
-        response.send(produits);
+        response.status(200).send(produits);
  });
 
  app.get('/produits/:id',(request,response)=>{
@@ -40,9 +40,14 @@ const produits = [
         for(i=0;i<produits.length;i++){
             if(produits[i].id==id)
             {
-                response.send(produits[i]);
+                response.status(200).send(produits[i]);
             }
         }
+        if(id>=produits.length)
+        {
+          response.status(404).send("Produit non trouvé");
+        }
+
         response.set("x-response-description","Affichage d'un produit");
  });
 
@@ -61,14 +66,30 @@ const produits = [
         description: description
     };
     //console.log(body)
-    produits.push(newProduit);
-    response.set("x-response-description","Ajout d'un produit");
-    response.send("sent");
+    if(id==null || nom==null || prix==null||description==null)
+    {
+      response.status(400).send("ressource incorrect");
+    }
+    else
+    {
+      produits.push(newProduit);
+      response.set("x-response-description","Ajout d'un produit");
+      response.status(201).send("sent");
+    }
+   
  });
 
  app.put('/produits/:id', (request, response) => {
    console.log(request.header("x-request-description"));
     const id  = request.params.id;
+
+    if(request.body.prix==null && request.body.prix==null && request.body.prix==null){
+      response.status(400).send("Produit non trouvé");
+    }
+    if(id>=produits.length)
+      {
+        response.status(404).send("Produit non trouvé")
+      }
     for(i=0;i<produits.length;i++){
         if(produits[i].id==id)
         {
@@ -78,25 +99,33 @@ const produits = [
         }
     }
     response.set("x-response-description","modification d'un produit");
-    response.send("produit modifié avec succès")
+    response.status(200).send("produit modifié avec succès")
 });
 
 app.delete('/produits',(request,response)=>{
   console.log(request.header("x-request-description"));
   produits.length=0
   response.set("x-response-description","suppression des produits");
-  response.send("Produits supprimés")
+  response.status(204).send("Produits supprimés")
 }) 
 
 app.delete('/produits/:id',(request,response)=>{
   console.log(request.header("x-request-description"));
   const id= request.params.id
-  for(i=0;i<produits.length;i++){
-    if(produits[i].id==id){
-      produits.splice(i,1);
-    }
+  
+    for(i=0;i<produits.length;i++)
+      {
+      if(produits[i].id==id)
+      {
+        produits.splice(i,1);
+      }
+    response.set("x-response-description","suppression d'un produit");
+    response.status(204).send("Produit supprimé")
   }
-  response.set("x-response-description","suppression d'un produit");
-  response.send("Produit supprimé")
+  if(id>=produits.length)
+  {
+    response.status(404).send("Produit non trouvé")
+  }
+ 
 })
 
