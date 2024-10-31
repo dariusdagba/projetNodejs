@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser=require('body-parser');
 const app = express();
 
+
 const items = [ { id: 1, name: "item1", quantity: 100, category: "electronics" }, { id: 2, name: "item2", quantity: 50, category: "furniture" }, { id: 3, name: "item3", quantity: 200, category: "clothing" } ];
 
 app.use(bodyParser.json()); 
@@ -10,7 +11,6 @@ app.use(bodyParser.json());
 app.get('/items', function(req,res){
     res.send(items)
 })
-
 
 // Ajoute un nouvel élément
 app.post('/items', function (req, res) {

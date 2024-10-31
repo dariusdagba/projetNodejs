@@ -83,7 +83,7 @@ const produits = [
    console.log(request.header("x-request-description"));
     const id  = request.params.id;
 
-    if(request.body.prix==null && request.body.prix==null && request.body.prix==null){
+    if(request.body.prix==null && request.body.nom==null && request.body.description==null){
       response.status(400).send("Produit non trouvé");
     }
     if(id>=produits.length)
